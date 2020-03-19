@@ -95,36 +95,42 @@
 
 <script>
 import axios from "axios";
+import store from "./store";
 
 export default {
   name: "app",
-  data() {
-    return {
-      items: [],
-      cars: [],
-      searchName: "",
-      countOfPage: 10,
-      currentPage: 1,
-      totalPrice: 0
-    };
-  },
   computed: {
+    items() {
+      return store.state.items;
+    },
+    cars() {
+      return store.state.cars;
+    },
+    searchName() {
+      return store.state.searchName;
+    },
+    countOfPage() {
+      return store.state.countOfPage;
+    },
+    currentPage() {
+      return store.state.currentPage;
+    },
+    totalPrice() {
+      return store.state.totalPrice;
+    },
+
     filterItems() {
-      return this.items.filter(d =>
-        d.name.toLowerCase().includes(this.searchName.toLowerCase())
-      );
+      return store.getters.filterItems;
     },
     totalPage() {
-      return Math.ceil(this.filterItems.length / this.countOfPage);
+       return store.getters.totalPage;
     },
     pageStart() {
-      return (this.currentPage - 1) * this.countOfPage;
+       return store.getters.pageStart;
     }
   },
   created() {
-    axios.get("http://localhost:9090/ItemList").then(res => {
-      this.items = res.data;
-    });
+    store.dispatch('getItems')
   },
   methods: {
     setPage(page) {
